@@ -14,7 +14,7 @@
 
     <string name="selector_preview_easy_photos">预览</string>
 
-    <string name="selector_reach_max_hint_easy_photos">超出最大选择数</string>
+    <string name="selector_reach_max_hint_easy_photos">超出最大选择数%1$d</string>
 
     <string name="selector_reach_max_image_hint_easy_photos">最多只能选择%d张图片</string>
 

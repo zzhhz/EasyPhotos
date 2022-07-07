@@ -32,18 +32,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.exifinterface.media.ExifInterface;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
-
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Code;
@@ -74,6 +62,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsAdapter.OnClickListener, PhotosAdapter.OnClickListener, AdListener, View.OnClickListener {
 
@@ -149,7 +149,7 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
         hideActionBar();
         adaptationStatusBar();
         loadingDialog = LoadingDialog.get(this);
-        isQ = Build.VERSION.SDK_INT == Build.VERSION_CODES.Q;
+        isQ = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
         if (!Setting.onlyStartCamera && null == Setting.imageEngine) {
             finish();
             return;
@@ -308,23 +308,37 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                 this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
 
             if (isQ) {
-                photoUri = createImageUri();
+                if (Setting.uriCameraFile != null) {
+                    photoUri = Setting.uriCameraFile;
+                } else if (!TextUtils.isEmpty(Setting.fileCameraPath)) {
+                    photoUri = Uri.fromFile(new File(Setting.fileCameraPath));
+                } else {
+                    photoUri = createImageUri();
+                }
+
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 startActivityForResult(cameraIntent, requestCode);
                 return;
             }
+            if (Setting.uriCameraFile != null) {
+                photoUri = Setting.uriCameraFile;
+                mTempImageFile = new File(photoUri.getPath());
+            } else if (!TextUtils.isEmpty(Setting.fileCameraPath)) {
+                mTempImageFile = new File(Setting.fileCameraPath);
+                photoUri = Uri.fromFile(mTempImageFile);
+            } else {
+                createCameraTempImageFile();
+                if (mTempImageFile != null && mTempImageFile.isFile()) {
+                    photoUri = UriUtils.getUri(this, mTempImageFile);
+                }
+            }
 
-            createCameraTempImageFile();
             if (mTempImageFile != null && mTempImageFile.isFile()) {
-
-                Uri imageUri = UriUtils.getUri(this, mTempImageFile);
-
                 cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //对目标应用临时授权该Uri所代表的文件
                 cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION); //对目标应用临时授权该Uri所代表的文件
-
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);//将拍取的照片保存到指定URI
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);//将拍取的照片保存到指定URI
                 startActivityForResult(cameraIntent, requestCode);
             } else {
                 Toast.makeText(getApplicationContext(), R.string.camera_temp_file_error_easy_photos,

@@ -15,6 +15,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
+import com.huantansheng.easyphotos.EasyPhotos;
+import com.huantansheng.easyphotos.callback.PuzzleCallback;
+import com.huantansheng.easyphotos.callback.SelectCallback;
+import com.huantansheng.easyphotos.constant.Type;
+import com.huantansheng.easyphotos.models.album.entity.Photo;
+import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.utils.permission.PermissionUtil;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,22 +37,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
-
-import com.google.android.material.navigation.NavigationView;
-import com.huantansheng.easyphotos.EasyPhotos;
-import com.huantansheng.easyphotos.callback.PuzzleCallback;
-import com.huantansheng.easyphotos.callback.SelectCallback;
-import com.huantansheng.easyphotos.constant.Type;
-import com.huantansheng.easyphotos.models.album.AlbumModel;
-import com.huantansheng.easyphotos.models.album.entity.Photo;
-import com.huantansheng.easyphotos.setting.Setting;
-import com.huantansheng.easyphotos.ui.EasyPhotosActivity;
-import com.huantansheng.easyphotos.ui.dialog.LoadingDialog;
-import com.huantansheng.easyphotos.utils.permission.PermissionUtil;
-import com.huantansheng.easyphotos.utils.settings.SettingsUtils;
-
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 public class SampleActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

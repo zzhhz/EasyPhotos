@@ -1,6 +1,6 @@
 package com.huantansheng.easyphotos.setting;
 
-import androidx.annotation.IntDef;
+import android.net.Uri;
 import android.view.View;
 
 import com.huantansheng.easyphotos.constant.Type;
@@ -12,6 +12,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.IntDef;
 
 /**
  * EasyPhotos的设置值
@@ -35,6 +37,8 @@ public class Setting {
     public static String originalMenuUnusableHint = "";
     public static boolean selectedOriginal = false;
     public static String fileProviderAuthority = null;
+    public static String fileCameraPath = null;
+    public static Uri uriCameraFile = null;
     public static boolean isShowCamera = false;
     public static int cameraLocation = 1;
     public static boolean onlyStartCamera = false;
