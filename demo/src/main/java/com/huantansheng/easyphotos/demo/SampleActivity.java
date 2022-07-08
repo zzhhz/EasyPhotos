@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
 import com.huantansheng.easyphotos.utils.permission.PermissionUtil;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -83,6 +85,7 @@ public class SampleActivity extends AppCompatActivity
     private void preLoadAlbums() {
         EasyPhotos.preLoad(this);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -167,7 +170,7 @@ public class SampleActivity extends AppCompatActivity
         switch (id) {
             case R.id.camera://单独使用相机
 
-                EasyPhotos.createCamera(this,true)
+                EasyPhotos.createCamera(this, true)
                         .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
                         .start(101);//也可以选择链式调用写法
 
@@ -235,9 +238,9 @@ public class SampleActivity extends AppCompatActivity
                         });
                 break;
             case R.id.album_complex_selector1:// 复杂选择器，最多选择2个视频3张图片
-                EasyPhotos.createAlbum(this,false,false,GlideEngine.getInstance())
+                EasyPhotos.createAlbum(this, false, false, GlideEngine.getInstance())
                         .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
-                        .complexSelector(false,2,3)//参数说明：是否只能选择单类型，视频数，图片数。
+                        .complexSelector(false, 2, 3)//参数说明：是否只能选择单类型，视频数，图片数。
                         .start(new SelectCallback() {
                             @Override
                             public void onResult(ArrayList<Photo> photos, boolean isOriginal) {
@@ -255,9 +258,9 @@ public class SampleActivity extends AppCompatActivity
                         });
                 break;
             case R.id.album_complex_selector2:// 复杂选择器，根据用户选择的第一个文件类型，确定用户只能选择的文件类型，视频只能选择2个，图片只能选择3个
-                EasyPhotos.createAlbum(this,false,false,GlideEngine.getInstance())
+                EasyPhotos.createAlbum(this, false, false, GlideEngine.getInstance())
                         .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
-                        .complexSelector(true,2,3)//参数说明：是否只能选择单类型，视频数，图片数。
+                        .complexSelector(true, 2, 3)//参数说明：是否只能选择单类型，视频数，图片数。
                         .start(new SelectCallback() {
                             @Override
                             public void onResult(ArrayList<Photo> photos, boolean isOriginal) {
@@ -368,7 +371,7 @@ public class SampleActivity extends AppCompatActivity
 
             case R.id.addWatermark: //给图片添加水印
 
-                EasyPhotos.createAlbum(this,false,true,GlideEngine.getInstance())
+                EasyPhotos.createAlbum(this, false, true, GlideEngine.getInstance())
                         .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
                         .setPuzzleMenu(false)
                         .start(new SelectCallback() {
@@ -388,7 +391,7 @@ public class SampleActivity extends AppCompatActivity
                                     e.printStackTrace();
                                 }
                                 //给图片添加水印的api
-                                bitmap = EasyPhotos.addWatermark(watermark, bitmap, 1080, 20, 20, true,photos.get(0).orientation);
+                                bitmap = EasyPhotos.addWatermark(watermark, bitmap, 1080, 20, 20, true, photos.get(0).orientation);
 
                                 bitmapView.setVisibility(View.VISIBLE);
                                 bitmapView.setImageBitmap(bitmap);
@@ -438,6 +441,23 @@ public class SampleActivity extends AppCompatActivity
 
             case R.id.face_detection://人脸检测，目前仅支持正脸检测
                 //暂时不做了。会导致lib过大，而且并不稳定
+                break;
+            case R.id.album_file_path://人脸检测，目前仅支持正脸检测
+                String image = getExternalFilesDir("image").getAbsolutePath() + File.separator + System.currentTimeMillis() + ".jpeg";
+                Log.d("image", image);
+                EasyPhotos.createCamera(this, false)
+                        .setFileProviderAuthority("com.huantansheng.easyphotos.demo.fileprovider")
+                        .setFileCameraPath(image).start(new SelectCallback() {
+                            @Override
+                            public void onResult(ArrayList<Photo> photos, boolean isOriginal) {
+                                Log.e("------", photos.get(0).path);
+                            }
+
+                            @Override
+                            public void onCancel() {
+
+                            }
+                        });
                 break;
             default:
                 break;

@@ -4,10 +4,6 @@ import android.app.Activity;
 import android.net.Uri;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-
 import com.huantansheng.easyphotos.callback.SelectCallback;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.engine.ImageEngine;
@@ -23,6 +19,10 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 /**
  * EasyPhotos的启动管理器
@@ -301,11 +301,11 @@ public class AlbumBuilder {
     /**
      * 设置默认选择图片集合
      *
-     * @param selectedPhotos 默认选择图片集合
+     * @param selectedPhotos             默认选择图片集合
      * @param isSequentialSelectedPhotos 当传入已选中图片时，是否按照之前选中的顺序排序
      * @return AlbumBuilder
      */
-    public AlbumBuilder setSelectedPhotos(ArrayList<Photo> selectedPhotos,boolean isSequentialSelectedPhotos) {
+    public AlbumBuilder setSelectedPhotos(ArrayList<Photo> selectedPhotos, boolean isSequentialSelectedPhotos) {
         Setting.selectedPhotos.clear();
         Setting.isSequentialSelectedPhotos = isSequentialSelectedPhotos;
         if (selectedPhotos.isEmpty()) {
@@ -352,13 +352,13 @@ public class AlbumBuilder {
     /**
      * 设置默认选择图片地址集合
      *
-     * @param selectedPhotoPaths 默认选择图片地址集合
+     * @param selectedPhotoPaths         默认选择图片地址集合
      * @param isSequentialSelectedPhotos 当传入已选中图片时，是否按照之前选中的顺序排序
      * @return AlbumBuilder
      * @Deprecated android 10 不推荐使用直接使用Path方式，推荐使用Photo类
      */
     @Deprecated
-    public AlbumBuilder setSelectedPhotoPaths(ArrayList<String> selectedPhotoPaths,boolean isSequentialSelectedPhotos) {
+    public AlbumBuilder setSelectedPhotoPaths(ArrayList<String> selectedPhotoPaths, boolean isSequentialSelectedPhotos) {
         Setting.selectedPhotos.clear();
         Setting.isSequentialSelectedPhotos = isSequentialSelectedPhotos;
         ArrayList<Photo> selectedPhotos = new ArrayList<>();
@@ -442,6 +442,27 @@ public class AlbumBuilder {
      */
     public AlbumBuilder setGif(boolean shouldShow) {
         Setting.showGif = shouldShow;
+        return AlbumBuilder.this;
+    }
+
+    /**
+     * 拍照生成图片的路径，优先使用 Setting.fileCameraUri 参数
+     *
+     * @param imageFilePath 拍照生成图片的路径
+     * @return @return AlbumBuilder
+     */
+    public AlbumBuilder setFileCameraPath(String imageFilePath) {
+        Setting.fileCameraPath = imageFilePath;
+        return AlbumBuilder.this;
+    }
+    /**
+     * 拍照生成图片的路径。
+     *
+     * @param fileCameraUri 拍照生成图片的路径
+     * @return @return AlbumBuilder
+     */
+    public AlbumBuilder setFileCameraUri(Uri fileCameraUri) {
+        Setting.fileCameraUri = fileCameraUri;
         return AlbumBuilder.this;
     }
 

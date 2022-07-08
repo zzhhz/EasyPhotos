@@ -308,8 +308,8 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                 this.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
 
             if (isQ) {
-                if (Setting.uriCameraFile != null) {
-                    photoUri = Setting.uriCameraFile;
+                if (Setting.fileCameraUri != null) {
+                    photoUri = Setting.fileCameraUri;
                 } else if (!TextUtils.isEmpty(Setting.fileCameraPath)) {
                     photoUri = Uri.fromFile(new File(Setting.fileCameraPath));
                 } else {
@@ -322,18 +322,20 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
                 startActivityForResult(cameraIntent, requestCode);
                 return;
             }
-            if (Setting.uriCameraFile != null) {
-                photoUri = Setting.uriCameraFile;
+            if (Setting.fileCameraUri != null) {
+                photoUri = Setting.fileCameraUri;
                 mTempImageFile = new File(photoUri.getPath());
             } else if (!TextUtils.isEmpty(Setting.fileCameraPath)) {
                 mTempImageFile = new File(Setting.fileCameraPath);
-                photoUri = Uri.fromFile(mTempImageFile);
+                photoUri = UriUtils.getUri(this, mTempImageFile);
             } else {
                 createCameraTempImageFile();
                 if (mTempImageFile != null && mTempImageFile.isFile()) {
                     photoUri = UriUtils.getUri(this, mTempImageFile);
                 }
             }
+
+            checkTempImageFile();
 
             if (mTempImageFile != null && mTempImageFile.isFile()) {
                 cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //对目标应用临时授权该Uri所代表的文件
@@ -346,6 +348,23 @@ public class EasyPhotosActivity extends AppCompatActivity implements AlbumItemsA
             }
         } else {
             Toast.makeText(getApplicationContext(), R.string.msg_no_camera_easy_photos, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void checkTempImageFile() {
+        if (mTempImageFile != null) {
+            File parentFile = mTempImageFile.getParentFile();
+            if (!parentFile.exists()) {
+                parentFile.mkdirs();
+            }
+            if (!mTempImageFile.exists()) {
+                try {
+                    mTempImageFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

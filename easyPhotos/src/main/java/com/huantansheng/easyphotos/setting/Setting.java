@@ -38,7 +38,7 @@ public class Setting {
     public static boolean selectedOriginal = false;
     public static String fileProviderAuthority = null;
     public static String fileCameraPath = null;
-    public static Uri uriCameraFile = null;
+    public static Uri fileCameraUri = null;
     public static boolean isShowCamera = false;
     public static int cameraLocation = 1;
     public static boolean onlyStartCamera = false;
@@ -97,6 +97,8 @@ public class Setting {
         complexVideoCount = 0;
         complexPictureCount = 0;
         isSequentialSelectedPhotos = true;
+        fileCameraUri = null;
+        fileCameraPath = null;
     }
 
     public static boolean isFilter(String type) {

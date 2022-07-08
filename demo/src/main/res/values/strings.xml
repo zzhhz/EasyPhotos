@@ -14,6 +14,7 @@
     <string name="album_has_video">相册（支持video和gif）</string>
     <string name="album_only_video">相册（只显示video）</string>
     <string name="album_no_menu">相册（不显示底部编辑图标按钮）</string>
+    <string name="album_file">拍照并设置图片路径</string>
     <string name="album_single">相册(无相机单选，无宽高）</string>
     <string name="album_multi">相册(无相机多选，无宽高）</string>
     <string name="album_ad">相册（带广告，无宽高）</string>
